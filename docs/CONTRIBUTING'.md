@@ -142,13 +142,12 @@ Pastikan kamu sudah:
 
 ---
 
-## 🧠 7. Tips Kolaborasi Tim
+## 🗒️ 7. Notes
 
 💬 **Jangan bekerja langsung di `main` atau `develop`.**
 🌿 Gunakan branch fitur agar aman dan mudah direview.
 📥 Sering lakukan `git pull origin develop` supaya selalu update.
-🪄 Gunakan PR untuk review antar tim agar tidak bentrok.
-📝 Update checklist README kalau fiturmu sudah selesai.
+📝 Update checklist di spreadsheet
 🎯 Satu branch = satu fitur → agar mudah dikelola.
 
 ---
