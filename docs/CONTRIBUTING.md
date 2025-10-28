@@ -144,10 +144,10 @@ Pastikan kamu sudah:
 
 ## 🗒️ 7. Notes
 
-💬 **Jangan bekerja langsung di `main` atau `develop`.**
-🌿 Gunakan branch fitur agar aman dan mudah direview.
-📥 Sering lakukan `git pull origin develop` supaya selalu update.
-📝 Update checklist di spreadsheet
-🎯 Satu branch = satu fitur → agar mudah dikelola.
+💬 **Jangan bekerja langsung di `main` atau `develop`.**  
+🌿 Gunakan branch fitur agar aman dan mudah direview.  
+📥 Sering lakukan `git pull origin develop` supaya selalu update.  
+📝 Update checklist di spreadsheet  
+🎯 Satu branch = satu fitur → agar mudah dikelola.  
 
 ---
