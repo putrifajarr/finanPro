@@ -21,4 +21,4 @@ npm run dev
 ````
 
 ## 📘 Panduan Kontribusi
-Lihat panduan lengkap kolaborasi tim di [CONTRIBUTING.md](./docs/CONTRIBUTING.md)
+Lihat panduan lengkap kolaborasi tim di [CONTRIBUTING.md](./CONTRIBUTING.md)
