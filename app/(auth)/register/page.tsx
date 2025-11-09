@@ -5,16 +5,15 @@ import Link from "next/link";
 export default function RegisterPage() {
   return (
     <div className="flex min-h-screen">
-      <div className="hidden md:flex md:w-1/2 bg-green-900 items-center justify-center">
-        <Image
-          src="/images/login-bg.png"
-          alt="Register Illustration"
-          width={600}
-          height={600}
-          className="rounded-r-3xl"
-          priority
-        />
-      </div>
+        <div className="hidden md:block md:w-1/2 relative">
+          <Image
+            src="/images/login-bg.png"
+            alt="Login Illustration"
+            fill
+            className="object-cover rounded-r-3xl"
+            priority
+          />
+        </div>
 
       {/* form daftar */}
       <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-white px-8 md:px-16">

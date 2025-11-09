@@ -6,13 +6,12 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen">
       {/* Bagian kiri (gambar) */}
-      <div className="hidden md:flex md:w-1/2 bg-green-900 items-center justify-center">
+      <div className="hidden md:block md:w-1/2 relative">
         <Image
           src="/images/login-bg.png"
           alt="Login Illustration"
-          width={600}
-          height={600}
-          className="rounded-r-3xl"
+          fill
+          className="object-cover rounded-r-3xl"
           priority
         />
       </div>

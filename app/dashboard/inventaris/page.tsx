@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Sidebar from "@/components/Sidebar";
 import {
   MagnifyingGlassIcon,
   PlusCircleIcon,
@@ -39,19 +40,7 @@ export default function Inventaris() {
     <div className="flex min-h-screen bg-gray-100">
 
       {/* Sidebar */}
-      <aside className="w-60 bg-white shadow-md p-5 flex flex-col">
-        <h2 className="text-xl font-bold mb-6">FinanPro</h2>
-        <nav className="flex flex-col gap-3 text-gray-700">
-          <a className="hover:text-lime-600" href="#">Dashboard</a>
-          <a className="hover:text-lime-600" href="#">Laporan Laba</a>
-          <a className="hover:text-lime-600" href="#">Hutang-Piutang</a>
-          <a className="bg-lime-100 text-lime-700 px-3 py-2 rounded">Inventaris</a>
-          <a className="hover:text-lime-600" href="#">Riwayat Transaksi</a>
-        </nav>
-        <button className="mt-auto text-red-500 border border-red-400 px-3 py-2 rounded hover:bg-red-50">
-          Logout
-        </button>
-      </aside>
+      <Sidebar />
 
       {/* MAIN */}
       <main className="flex-1 px-10 py-8">
