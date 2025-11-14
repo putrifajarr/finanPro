@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Opsional tapi direkomendasikan untuk tampilan yang lebih halus */
+html, body {
+  @apply min-h-screen bg-gray-50 text-gray-900;
+  font-family: system-ui, sans-serif;
+}
+
+a {
+  @apply text-lime-600 hover:text-lime-700;
+}
+
+button {
+  @apply transition-colors duration-200;
+}
