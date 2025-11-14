@@ -6,12 +6,12 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen">
       {/* Bagian kiri (gambar) */}
-      <div className="hidden md:flex md:w-1/2 bg-green-900 relative overflow-hidden rounded-r-3xl">
+      <div className="hidden md:block md:w-1/2 relative">
         <Image
           src="/images/login-bg.png"
           alt="Login Illustration"
           fill
-          className="object-cover w-full h-full"
+          className="object-cover rounded-r-3xl"
           priority
         />
       </div>
@@ -74,7 +74,11 @@ export default function LoginPage() {
 
           {/* Tombol Google */}
           <button className="w-full flex items-center justify-center gap-2 border py-2 rounded-md hover:bg-gray-50">
+<<<<<<< HEAD
             <Image src="/icons/logo-google.svg" alt="Google" width={20} height={20} />
+=======
+            <Image src="icons/logo-google.svg" alt="Google" width={20} height={20} />
+>>>>>>> 64afbd9cf229f442e614f3d6b1f331c35faa4a6e
             <span>Masuk dengan Google</span>
           </button>
 
@@ -89,4 +93,8 @@ export default function LoginPage() {
       </div>
     </div>
   );
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 64afbd9cf229f442e614f3d6b1f331c35faa4a6e

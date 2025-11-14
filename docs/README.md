@@ -18,3 +18,7 @@ Aplikasi manajemen keuangan berbasis web untuk mencatat transaksi, memantau inve
 ```bash
 npm install
 npm run dev
+````
+
+## 📘 Panduan Kontribusi
+Lihat panduan lengkap kolaborasi tim di [CONTRIBUTING.md](./CONTRIBUTING.md)
