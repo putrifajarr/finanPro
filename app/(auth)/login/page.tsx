@@ -5,24 +5,24 @@ import Link from "next/link";
 export default function LoginPage() {
   return (
     <div className="flex min-h-screen">
-      {/* Bagian kiri (gambar) */}
-      <div className="hidden md:block md:w-1/2 relative">
+      {/* Bagian kiri */}
+      <div className="hidden md:flex md:w-1/2 bg-green-900 relative overflow-hidden rounded-r-3xl">
         <Image
           src="/images/login-bg.png"
           alt="Login Illustration"
           fill
-          className="object-cover rounded-r-3xl"
+          className="object-cover w-full h-full"
           priority
         />
       </div>
 
-      {/* Bagian kanan (form login) */}
+      {/* Bagian kanan */}
       <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-white px-8 md:px-16">
         <div className="w-full max-w-sm">
-          {/* Logo dan judul */}
+          {/* Logo */}
           <div className="flex items-center gap-2 mb-6">
             <span className="text-lime-500 text-3xl">
-                <img src="/icons/icon-finpro.svg" alt="" />
+              <img src="/icons/icon-finpro.svg" alt="" />
             </span>
             <h1 className="text-2xl font-semibold text-gray-800">FinanPro</h1>
           </div>
@@ -32,7 +32,6 @@ export default function LoginPage() {
             Silahkan masukan email dan kata sandi Anda
           </p>
 
-          {/* Form login */}
           <form className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
@@ -72,17 +71,12 @@ export default function LoginPage() {
             <div className="flex-grow h-px bg-gray-300"></div>
           </div>
 
-          {/* Tombol Google */}
+          {/* Google Login */}
           <button className="w-full flex items-center justify-center gap-2 border py-2 rounded-md hover:bg-gray-50">
-<<<<<<< HEAD
             <Image src="/icons/logo-google.svg" alt="Google" width={20} height={20} />
-=======
-            <Image src="icons/logo-google.svg" alt="Google" width={20} height={20} />
->>>>>>> 64afbd9cf229f442e614f3d6b1f331c35faa4a6e
             <span>Masuk dengan Google</span>
           </button>
 
-          {/* Link daftar */}
           <p className="text-sm text-center text-gray-600 mt-4">
             Tidak memiliki akun?{" "}
             <Link href="/register" className="text-lime-600 font-semibold hover:underline">
@@ -93,8 +87,4 @@ export default function LoginPage() {
       </div>
     </div>
   );
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 64afbd9cf229f442e614f3d6b1f331c35faa4a6e
