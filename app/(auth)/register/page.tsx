@@ -5,17 +5,16 @@ import Link from "next/link";
 export default function RegisterPage() {
   return (
     <div className="flex min-h-screen">
-        <div className="hidden md:block md:w-1/2 relative">
-          <Image
-            src="/images/login-bg.png"
-            alt="Login Illustration"
-            fill
-            className="object-cover rounded-r-3xl"
-            priority
-          />
-        </div>
+      <div className="hidden md:flex md:w-1/2 bg-green-900 relative overflow-hidden rounded-r-3xl">
+        <Image
+          src="/images/login-bg.png"
+          alt="Login Illustration"
+          fill
+          className="object-cover w-full h-full"
+          priority
+        />
+      </div>
 
-      {/* form daftar */}
       <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-white px-8 md:px-16">
         <div className="w-full max-w-sm">
           <div className="flex items-center gap-2 mb-6">
@@ -30,7 +29,6 @@ export default function RegisterPage() {
             Silahkan daftarkan email dan kata sandi Anda
           </p>
 
-          {/* Form Daftar */}
           <form className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -82,11 +80,10 @@ export default function RegisterPage() {
 
           {/* Tombol Google */}
           <button className="w-full flex items-center justify-center gap-2 border py-2 rounded-md hover:bg-gray-50">
-            <Image src="icons/logo-google.svg" alt="Google" width={20} height={20} />
+            <Image src="/icons/logo-google.svg" alt="Google" width={20} height={20} />
             <span>Daftar dengan Google</span>
           </button>
 
-          {/* Link ke halaman login */}
           <p className="text-sm text-center text-gray-600 mt-4">
             Memiliki akun?{" "}
             <Link href="/login" className="text-lime-600 font-semibold hover:underline">
