@@ -1,9 +1,9 @@
 "use client";
 
 import Sidebar from "@/components/Sidebar";
-import CardStat from "@/components/CardStat";
 import ChartKeuangan from "@/components/ChartKeuangan";
 import TransaksiTerbaru from "@/components/TransaksiTerbaru";
+import CardStat from "@/components/CardStat";
 
 export default function Dashboard() {
   return (
