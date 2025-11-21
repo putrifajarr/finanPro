@@ -15,3 +15,4 @@ model users {
   googleid           String?   @unique
   tanggal_registrasi DateTime? @default(now()) @db.Timestamp(6)
 }
+
