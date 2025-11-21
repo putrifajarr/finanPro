@@ -1,4 +1,5 @@
 "use client";
+
 import {
   LineChart,
   Line,
@@ -23,28 +24,46 @@ const data = [
 
 export default function ChartKeuangan() {
   return (
-    <>
-      <div className="flex justify-between mb-4">
+    <div className="bg-white p-6 rounded-2xl shadow-sm border">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4">
         <h3 className="font-semibold">Grafik Keuangan</h3>
-        <div className="space-x-2">
-          <button className="border px-3 py-1 text-sm rounded-md bg-white shadow-sm">
-            12 Bulan
-          </button>
-          <button className="border px-3 py-1 text-sm rounded-md">6 Bulan</button>
-          <button className="border px-3 py-1 text-sm rounded-md">30 Hari</button>
+
+        <div className="flex gap-2">
+          {["12 Bulan", "6 Bulan", "30 Hari"].map((f, i) => (
+            <button
+              key={i}
+              className={`border px-3 py-1 text-sm rounded-md ${
+                i === 0 ? "bg-lime-100 border-lime-300" : "bg-white"
+              }`}
+            >
+              {f}
+            </button>
+          ))}
         </div>
       </div>
 
-      <ResponsiveContainer width="100%" height={250}>
+      {/* Chart */}
+      <ResponsiveContainer width="100%" height={260}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
-          <Line type="monotone" dataKey="pemasukan" stroke="#84cc16" strokeWidth={2} />
-          <Line type="monotone" dataKey="pengeluaran" stroke="#ef4444" strokeWidth={2} />
+          <Line
+            type="monotone"
+            dataKey="pemasukan"
+            stroke="#84cc16"
+            strokeWidth={2}
+          />
+          <Line
+            type="monotone"
+            dataKey="pengeluaran"
+            stroke="#ef4444"
+            strokeWidth={2}
+          />
         </LineChart>
       </ResponsiveContainer>
-    </>
+    </div>
   );
 }

@@ -37,7 +37,7 @@
     ".next/dev/types/**/*.ts",
     ".next\\dev/types/**/*.ts",
     ".next\\dev/types/**/*.ts"
-  ],
+, "components/CardStat.js"  ],
   "exclude": [
     "node_modules"
   ]
