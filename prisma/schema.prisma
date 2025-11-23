@@ -8,15 +8,18 @@ datasource db {
 }
 
 model users {
-  id                 Int       @id @default(autoincrement())
+  id_user            Int       @id @default(autoincrement())
   nama_lengkap       String
   email              String    @unique
   password           String?
-  googleid           String?   @unique
+  google_auth_id     String?   @unique
+  status_verifikasi  Boolean   @default(false)
   tanggal_registrasi DateTime? @default(now()) @db.Timestamp(6)
+  otp_code           String?
+  otp_expires_at     DateTime?
 }
 
-
+// ENUM nama kategori
 enum nama_kategori {
   operasional
   penjualan
@@ -33,16 +36,64 @@ model kategori {
   id_kategori     String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   nama_kategori   nama_kategori
   jenis_kategori  jenis_kategori
+  // Relasi
   transaksi       transaksi[]
 }
 
+// TABEL TRANSAKSI
 model transaksi {
-  id_transaksi    String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  tanggal         DateTime       @db.Date
-  total_harga     Float
-  deskripsi       String?
-  jenis_transaksi jenis_kategori
+  id_transaksi   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id        Int
+  tanggal        DateTime @db.Date
+  total_harga    Float
+  deskripsi      String?
+  // FK ke kategori
+  id_kategori    String
+  kategori       kategori @relation(fields: [id_kategori], references: [id_kategori])
 
-  id_kategori     String
-  kategori        kategori       @relation(fields: [id_kategori], references: [id_kategori])
+  // Relasi
+  user           users    @relation(fields: [user_id], references: [id_user])
+  transaksi_detail transaksi_detail[]
+}
+
+
+// TABEL TRANSAKSI DETAIL
+model transaksi_detail {
+  id_detail      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id        Int
+  id_transaksi   String
+  id_produk      String?
+  jumlah_barang  Int?
+  harga_satuan   Float?
+  satuan         String?
+  subtotal       Float?
+
+  user           users     @relation(fields: [user_id], references: [id_user])
+  transaksi      transaksi @relation(fields: [id_transaksi], references: [id_transaksi])
+  produk         produk?   @relation(fields: [id_produk], references: [id_produk])
+}
+
+
+// TABEL HUTANG PIUTANG
+enum jenis_hutang_piutang {
+  hutang
+  piutang
+}
+
+enum status_pembayaran {
+  belum_lunas
+  lunas
+  dicicil
+}
+
+model hutang_piutang {
+  id_hutang_piutang  String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id            Int
+  nama_pihak         String
+  jenis_hutang_piutang jenis_hutang_piutang
+  jumlah             Float
+  jatuh_tempo        DateTime?
+  status_pembayaran  status_pembayaran   @default(belum_lunas)
+
+  user              users @relation(fields: [user_id], references: [id_user])
 }
