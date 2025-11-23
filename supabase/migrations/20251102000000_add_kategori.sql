@@ -1,17 +1,17 @@
--- ENUM untuk kategori, sesuai kebutuhan laporan laba
+-- ENUM kategori
 CREATE TYPE nama_kategori AS ENUM ('operasional', 'penjualan', 'pembelian', 'pajak');
 
--- ENUM jenis transaksi (untuk perhitungan laba)
+-- ENUM jenis transaksi (dipakai juga sebagai jenis kategori)
 CREATE TYPE jenis_kategori AS ENUM ('pemasukan', 'pengeluaran');
 
--- Tabel kategori (fixed dan tidak bisa dibuat user)
+-- Tabel kategori
 CREATE TABLE kategori (
   id_kategori uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   nama_kategori nama_kategori NOT NULL,
   jenis_kategori jenis_kategori NOT NULL
 );
 
--- Seeding kategori (anti duplikasi)
+-- Seeding kategori
 INSERT INTO kategori (nama_kategori, jenis_kategori) VALUES
 ('penjualan', 'pemasukan'),
 ('pembelian', 'pengeluaran'),
@@ -19,16 +19,12 @@ INSERT INTO kategori (nama_kategori, jenis_kategori) VALUES
 ('pajak', 'pengeluaran')
 ON CONFLICT DO NOTHING;
 
--- ENUM jenis transaksi untuk tabel transaksi
-CREATE TYPE jenis_transaksi AS ENUM ('pemasukan', 'pengeluaran');
-
 -- Tabel transaksi
 CREATE TABLE transaksi (
   id_transaksi uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   tanggal date NOT NULL,
   id_kategori uuid REFERENCES kategori(id_kategori),
-  jumlah numeric(15,2) NOT NULL,
+  total_harga numeric(15,2) NOT NULL,
   deskripsi text,
   jenis_transaksi jenis_kategori NOT NULL
 );
--- jenis transaksi = jenis kategori
