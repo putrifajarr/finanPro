@@ -16,3 +16,33 @@ model users {
   tanggal_registrasi DateTime? @default(now()) @db.Timestamp(6)
 }
 
+
+enum nama_kategori {
+  operasional
+  penjualan
+  pembelian
+  pajak
+}
+
+enum jenis_kategori {
+  pemasukan
+  pengeluaran
+}
+
+model kategori {
+  id_kategori     String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nama_kategori   nama_kategori
+  jenis_kategori  jenis_kategori
+  transaksi       transaksi[]
+}
+
+model transaksi {
+  id_transaksi    String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tanggal         DateTime       @db.Date
+  total_harga     Float
+  deskripsi       String?
+  jenis_transaksi jenis_kategori
+
+  id_kategori     String
+  kategori        kategori       @relation(fields: [id_kategori], references: [id_kategori])
+}
