@@ -22,7 +22,7 @@ type Row = {
 
 export default function HutangPiutangPage() {
   const [search, setSearch] = useState("");
-  const [filterType, setFilterType] = useState("Semua");
+  const [filterStatus, setFilterStatus] = useState("Semua");
   const [showForm, setShowForm] = useState(false);
 
   // form state
@@ -54,14 +54,14 @@ export default function HutangPiutangPage() {
 
   // filter + search
   const filtered = data.filter((r) => {
-    const matchesType = filterType === "Semua" ? true : r.tipe === filterType;
+    const matchesStatus = filterStatus === "Semua" ? true : r.status === filterStatus;
     const q = search.trim().toLowerCase();
     const matchesSearch =
       q === "" ||
       r.nama.toLowerCase().includes(q) ||
       r.jumlah.toString().includes(q) ||
       r.jatuhTempo.includes(q);
-    return matchesType && matchesSearch;
+    return matchesStatus && matchesSearch;
   });
 
   // handle simpan form (simpan ke data lokal)
@@ -138,12 +138,13 @@ export default function HutangPiutangPage() {
             <FunnelIcon className="h-5 w-5 text-gray-500 mr-2" />
             <select
               className="bg-transparent outline-none text-sm"
-              value={filterType}
-              onChange={(e) => setFilterType(e.target.value)}
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
             >
               <option value="Semua">Semua</option>
-              <option value="Hutang">Hutang</option>
-              <option value="Piutang">Piutang</option>
+              <option value="Belum Lunas">Belum Lunas</option>
+              <option value="Dicicil">Dicicil</option>
+              <option value="Lunas">Lunas</option>
             </select>
           </div>
 
