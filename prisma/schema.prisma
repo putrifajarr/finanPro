@@ -15,3 +15,23 @@ model users {
   googleid           String?   @unique
   tanggal_registrasi DateTime? @default(now()) @db.Timestamp(6)
 }
+
+
+enum nama_kategori {
+  operasional
+  penjualan
+  pembelian
+  pajak
+}
+
+enum jenis_kategori {
+  pemasukan
+  pengeluaran
+}
+
+model kategori {
+  id_kategori     String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nama_kategori   nama_kategori
+  jenis_kategori  jenis_kategori
+}
+
