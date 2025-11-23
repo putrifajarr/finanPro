@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "@prisma/client": "^7.0.0",
     "@tailwindcss/postcss": "^4.1.16",
     "date-fns": "^4.1.0",
     "file-saver": "^2.0.5",
