@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export default function Dashboard() {
   return (
-    <div className="flex min-h-screen">
+    <div className="flex max-h-screen">
       {/* Sidebar */}
       <Sidebar />
 
