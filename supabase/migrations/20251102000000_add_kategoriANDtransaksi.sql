@@ -1,17 +1,15 @@
--- ENUM kategori
+-- ENUM UNTUK KATEGORI
 CREATE TYPE nama_kategori AS ENUM ('operasional', 'penjualan', 'pembelian', 'pajak');
-
--- ENUM jenis transaksi (dipakai juga sebagai jenis kategori)
 CREATE TYPE jenis_kategori AS ENUM ('pemasukan', 'pengeluaran');
 
--- Tabel kategori
+-- TABLE KATEGORI (ENUM FIX)
 CREATE TABLE kategori (
   id_kategori uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   nama_kategori nama_kategori NOT NULL,
   jenis_kategori jenis_kategori NOT NULL
 );
 
--- Seeding kategori
+-- SEED KATEGORI DEFAULT
 INSERT INTO kategori (nama_kategori, jenis_kategori) VALUES
 ('penjualan', 'pemasukan'),
 ('pembelian', 'pengeluaran'),
@@ -19,12 +17,25 @@ INSERT INTO kategori (nama_kategori, jenis_kategori) VALUES
 ('pajak', 'pengeluaran')
 ON CONFLICT DO NOTHING;
 
--- Tabel transaksi
+
+-- TABLE TRANSAKSI (MILIK USER)
 CREATE TABLE transaksi (
   id_transaksi uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  tanggal date NOT NULL,
+  user_id INT REFERENCES users(id) ON DELETE CASCADE,
+  tanggal DATE NOT NULL,
   id_kategori uuid REFERENCES kategori(id_kategori),
   total_harga numeric(15,2) NOT NULL,
-  deskripsi text,
-  jenis_transaksi jenis_kategori NOT NULL
+  deskripsi TEXT
+);
+
+-- TABLE TRANSAKSI DETAIL (JIKA ADA PRODUK)
+CREATE TABLE transaksi_detail (
+  id_detail uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id INT REFERENCES users(id) ON DELETE CASCADE,
+  id_transaksi uuid REFERENCES transaksi(id_transaksi) ON DELETE CASCADE,
+  id_produk uuid REFERENCES produk(id_produk),
+  jumlah_barang integer,
+  harga_satuan numeric(15,2),
+  satuan TEXT,               -- boleh beda, disimpan manual
+  subtotal numeric(15,2)
 );
