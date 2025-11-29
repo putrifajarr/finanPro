@@ -1,4 +1,3 @@
-
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
   nama_lengkap TEXT NOT NULL,

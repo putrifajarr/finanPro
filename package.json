@@ -13,6 +13,7 @@
     "@prisma/client": "^6.8.1",
     "@supabase/supabase-js": "^2.84.0",
     "@tailwindcss/postcss": "^4.1.16",
+    "bcrypt": "^6.0.0",
     "date-fns": "^4.1.0",
     "file-saver": "^2.0.5",
     "html2canvas": "^1.4.1",
@@ -29,8 +30,10 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@types/file-saver": "^2.0.7",
     "@types/node": "^20",
     "@types/react": "^19",
+    "@types/react-date-range": "^1.4.10",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.0.0",

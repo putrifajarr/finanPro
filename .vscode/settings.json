@@ -1,0 +1,42 @@
+{
+    "sqltools.connections": [
+        {
+            "pgOptions": {
+                "ssl": {
+                    "rejectUnauthorized": true
+                },
+                "connectionTimeoutMillis": 5000,
+                "max": 10
+            },
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "aws-1-ap-southeast-1.pooler.supabase.com",
+            "port": 5432,
+            "sshOptions": {
+                "port": 22
+            },
+            "driver": "PostgreSQL",
+            "database": "finanpro",
+            "username": "postgres.wtvqfcqelfrjqpntarug",
+            "password": "lX8iJDZHsv4grTXk",
+            "name": "Supabase-FinanPro",
+            "connectionTimeout": 5000
+        },
+        {
+            "pgOptions": {
+                "ssl": {
+                    "rejectUnauthorized": false
+                }
+            },
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "aws-1-ap-southeast-1.pooler.supabase.com",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "Supabase-FinanPro",
+            "database": "postgres",
+            "password": "lX8iJDZHsv4grTXk",
+            "username": "postgres.wtvqfcqelfrjqpntarug"
+        }
+    ]
+}

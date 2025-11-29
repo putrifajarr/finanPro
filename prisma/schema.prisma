@@ -7,14 +7,112 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model users {
+model app_users {
   id_user            Int       @id @default(autoincrement())
   nama_lengkap       String
   email              String    @unique
+  job                String?
+  phone              String?
+  description        String?
+  avatar_url         String?   // tambahkan
   password           String?
   google_auth_id     String?   @unique
   status_verifikasi  Boolean   @default(false)
   tanggal_registrasi DateTime? @default(now()) @db.Timestamp(6)
   otp_code           String?
   otp_expires_at     DateTime?
+
+  transaksi        transaksi[]
+  transaksi_detail transaksi_detail[]
+  hutang_piutang   hutang_piutang[]
+}
+
+
+
+
+
+enum nama_kategori {
+  operasional
+  penjualan
+  pembelian
+  pajak
+}
+
+enum jenis_kategori {
+  pemasukan
+  pengeluaran
+}
+
+model kategori {
+  id_kategori    String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nama_kategori  nama_kategori
+  jenis_kategori jenis_kategori
+  transaksi      transaksi[]
+}
+
+model transaksi {
+  id_transaksi String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id      Int
+  tanggal      DateTime @db.Date
+  total_harga  Float
+  deskripsi    String?
+  id_kategori  String   @db.Uuid  // harus sama dengan kategori.id_kategori
+
+  kategori kategori  @relation(fields: [id_kategori], references: [id_kategori])
+  user     app_users @relation(fields: [user_id], references: [id_user])
+
+  transaksi_detail transaksi_detail[]
+}
+
+
+
+model transaksi_detail {
+  id_detail     String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id       Int
+  id_transaksi  String   @db.Uuid
+  id_produk     BigInt?
+  jumlah_barang Int?
+  harga_satuan  Decimal?
+  satuan        String?
+  subtotal      Decimal?
+
+  user      app_users @relation(fields: [user_id], references: [id_user])
+  transaksi transaksi @relation(fields: [id_transaksi], references: [id_transaksi])
+  produk    produk?   @relation(fields: [id_produk], references: [id_produk])
+}
+
+enum jenis_hutang_piutang {
+  hutang
+  piutang
+}
+
+enum status_pembayaran {
+  belum_lunas
+  lunas
+  dicicil
+}
+
+model hutang_piutang {
+  id_hutang_piutang    String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id              Int
+  nama_pihak           String
+  jenis_hutang_piutang jenis_hutang_piutang
+  jumlah               Decimal
+  jatuh_tempo          DateTime?
+  status_pembayaran    status_pembayaran    @default(belum_lunas)
+
+  user app_users @relation(fields: [user_id], references: [id_user])
+}
+
+model produk {
+  id_produk     BigInt  @id @default(autoincrement())
+  nama_produk   String  @db.VarChar(100)
+  kode_produk   String? @db.VarChar(50)
+  stok_minimum  Int
+  stok_saat_ini Int
+  satuan        String?
+  harga_pokok   Decimal @db.Decimal(15, 2)
+  harga_jual    Decimal @db.Decimal(15, 2)
+
+  transaksi_detail transaksi_detail[]
 }

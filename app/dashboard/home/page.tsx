@@ -4,10 +4,11 @@ import Sidebar from "@/components/Sidebar";
 import ChartKeuangan from "@/components/ChartKeuangan";
 import TransaksiTerbaru from "@/components/TransaksiTerbaru";
 import CardStat from "@/components/CardStat";
+import Link from "next/link";
 
 export default function Dashboard() {
   return (
-    <div className="flex min-h-screen">
+    <div className="flex max-h-screen">
       {/* Sidebar */}
       <Sidebar />
 
@@ -26,9 +27,11 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm">
             <ChartKeuangan />
-            <button className="mt-6 w-full bg-lime-500 text-white font-semibold py-2 rounded-lg hover:bg-lime-600">
-              Pantau Kesehatan Bisnis
-            </button>
+            <Link href="/dashboard/pantau-kesehatan">
+              <button className="mt-6 w-full bg-lime-500 text-white font-semibold py-2 rounded-lg hover:bg-lime-600">
+                Pantau Kesehatan Bisnis
+              </button>
+            </Link>
           </div>
 
           <TransaksiTerbaru />

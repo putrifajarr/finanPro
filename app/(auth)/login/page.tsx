@@ -7,10 +7,11 @@ import { supabase } from "@/lib/supabase";
 
 export default function LoginPage() {
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // ----------------------------------------------------
-  // GOOGLE LOGIN HANDLER
-  // ----------------------------------------------------
+  // ------------------------------------------
+  // GOOGLE LOGIN
+  // ------------------------------------------
   async function handleGoogleLogin() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -22,31 +23,44 @@ export default function LoginPage() {
     if (error) setMessage("Gagal login dengan Google");
   }
 
-  // ----------------------------------------------------
-  // EMAIL LOGIN HANDLER
-  // ----------------------------------------------------
+  // ------------------------------------------
+  // EMAIL LOGIN
+  // ------------------------------------------
   async function handleLogin(e: any) {
-    e.preventDefault();
-    setMessage("");
+  e.preventDefault();
+  setMessage("");
 
-    const email = e.target.email.value;
-    const password = e.target.password.value;
+  const email = e.target.email.value;
+  const password = e.target.password.value;
 
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+  const res = await fetch("/api/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
 
-    const data = await res.json();
+  const data = await res.json();
 
-    if (!res.ok) {
-      setMessage(data.error);
+  if (!res.ok) {
+    // jika backend kirim redirect (OTP Redirect)
+    if (data.redirect) {
+      window.location.href = data.redirect;
       return;
     }
 
-    window.location.href = "/dashboard/home";
+    setMessage(data.error);
+    return;
   }
+
+  // login sukses → redirect
+  if (data.redirect) {
+    window.location.href = data.redirect;
+    return;
+  }
+
+  window.location.href = "/dashboard/home";
+}
+
 
   return (
     <div className="flex min-h-screen">
@@ -85,6 +99,7 @@ export default function LoginPage() {
               <input
                 name="email"
                 type="email"
+                required
                 placeholder="abc123@gmail.com"
                 className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lime-400"
               />
@@ -95,6 +110,7 @@ export default function LoginPage() {
               <input
                 name="password"
                 type="password"
+                required
                 placeholder="Masukan kata sandi"
                 className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-lime-400"
               />
@@ -102,9 +118,10 @@ export default function LoginPage() {
 
             <button
               type="submit"
+              disabled={loading}
               className="w-full bg-lime-400 text-white font-semibold py-2 rounded-md hover:bg-lime-500 transition"
             >
-              Masuk
+              {loading ? "Memproses..." : "Masuk"}
             </button>
           </form>
 

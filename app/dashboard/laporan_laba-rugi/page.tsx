@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Sidebar from "@/components/Sidebar";
 import { DateRange } from "react-date-range";
 import {
   LineChart,
@@ -31,12 +32,14 @@ export default function LaporanLabaRugiPage() {
 
   const reportRef = useRef(null);
 
-  const formatRupiah = (angka: number): string => {
-    const sign = angka < 0 ? "-" : "";
-    const abs = Math.abs(Number(angka) || 0);
+  const formatRupiah = (angka: number | string): string => {
+    const num = Number(angka) || 0;
+    const sign = num < 0 ? "-" : "";
+    const abs = Math.abs(num);
     return sign + "Rp" + abs.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   };
 
+  // ====== Data Laporan ======
   const laporanRows = [
     { type: "header", label: "Pendapatan dan HPP" },
     { no: "1", keterangan: "Penjualan bersih", jumlah: 500000000 },
@@ -50,43 +53,52 @@ export default function LaporanLabaRugiPage() {
     { no: "", keterangan: "Laba operasional", jumlah: 130000000, bold: true },
 
     { type: "header", label: "Pendapatan & Beban Lainnya" },
-    { no: "3", keterangan: "Pendapatan lainnya", jumlah: 20000000 },
-    { no: "", keterangan: "Total pendapatan lainnya", jumlah: 20000000, bold: true },
-    { no: "", keterangan: "Laba sebelum pajak", jumlah: 150000000, bold: true },
+    { no: "3", keterangan: "Pendapatan bunga", jumlah: 50000000 },
+    { no: "", keterangan: "Beban bunga", jumlah: -10000000 },
+    { no: "", keterangan: "Keuntungan penjualan aset", jumlah: 3000000 },
+    { no: "", keterangan: "Total pendapatan & beban lainnya", jumlah: 2000000, bold: true },
+    { no: "", keterangan: "Laba sebelum pajak", jumlah: 128000000, bold: true },
 
     { type: "header", label: "Pajak Penghasilan" },
-    { no: "4", keterangan: "Pajak", jumlah: -50000000 },
+    { no: "4", keterangan: "Pajak penghasilan", jumlah: -28000000 },
     { no: "", keterangan: "Laba bersih", jumlah: 100000000, bold: true },
   ];
 
+  // ====== Data Grafik ======
   const chartData = [
-    { month: "Feb", value: 40 },
-    { month: "Mar", value: 50 },
-    { month: "Apr", value: 55 },
-    { month: "May", value: 60 },
-    { month: "Jun", value: 70 },
-    { month: "Jul", value: 75 },
-    { month: "Aug", value: 80 },
-    { month: "Sep", value: 85 },
-    { month: "Oct", value: 90 },
-    { month: "Nov", value: 95 },
-    { month: "Dec", value: 105 },
+    { month: "Jan", value: 45 },
+    { month: "Feb", value: 50 },
+    { month: "Mar", value: 55 },
+    { month: "Apr", value: 60 },
+    { month: "May", value: 70 },
+    { month: "Jun", value: 75 },
+    { month: "Jul", value: 80 },
+    { month: "Aug", value: 85 },
+    { month: "Sep", value: 90 },
+    { month: "Oct", value: 95 },
+    { month: "Nov", value: 100 },
+    { month: "Dec", value: 110 },
   ];
 
+  // ====== Export Excel ======
   const handleExportExcel = () => {
     const wsData = [
-      ["No", "Keterangan", "Jumlah"],
+      ["No", "Keterangan", "Jumlah (Rp)"],
       ...laporanRows
         .filter((r) => !r.type)
         .map((r) => [r.no, r.keterangan, r.jumlah]),
     ];
     const ws = XLSX.utils.aoa_to_sheet(wsData);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Laporan");
+    XLSX.utils.book_append_sheet(wb, ws, "Laporan Laba Rugi");
     const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-    saveAs(new Blob([wbout], { type: "application/octet-stream" }), "laporan-laba-rugi.xlsx");
+    saveAs(
+      new Blob([wbout], { type: "application/octet-stream" }),
+      "laporan-laba-rugi.xlsx"
+    );
   };
 
+  // ====== Export PDF ======
   const handleExportPDF = async () => {
     if (!reportRef.current) return;
     const canvas = await html2canvas(reportRef.current, { scale: 2 });
@@ -98,59 +110,93 @@ export default function LaporanLabaRugiPage() {
     pdf.save("laporan-laba-rugi.pdf");
   };
 
+  // ====== Tampilan Halaman ======
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-[1200px] mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-semibold">Laporan Laba Bersih</h1>
+    <div className="flex min-h-screen bg-gray-100">
+      {/* Sidebar */}
+      <Sidebar />
 
-          <div className="flex items-center gap-3 relative">
-            <div
-              onClick={() => setShowDatePicker(!showDatePicker)}
-              className="cursor-pointer text-sm px-3 py-2 bg-white border rounded-md hover:bg-gray-50"
-            >
-              {format(range[0].startDate, "dd MMM yyyy")} - {format(range[0].endDate, "dd MMM yyyy")}
+      {/* Main */}
+      <main className="flex-1 p-8">
+        <h1 className="text-2xl font-bold mb-6">Laporan Laba-Rugi</h1>
+
+        {/* Filter dan Export */}
+        <div className="flex items-center gap-3 mb-6 relative">
+          <div
+            onClick={() => setShowDatePicker(!showDatePicker)}
+            className="cursor-pointer text-sm px-3 py-2 bg-white border rounded-md hover:bg-gray-50"
+          >
+            {format(range[0].startDate, "dd MMM yyyy")} -{" "}
+            {format(range[0].endDate, "dd MMM yyyy")}
+          </div>
+
+          {showDatePicker && (
+            <div className="absolute z-30 top-12 bg-white shadow p-2 rounded">
+              <DateRange
+                ranges={range}
+                onChange={(item) =>
+                  setRange([
+                    {
+                      startDate: item.selection.startDate ?? new Date(),
+                      endDate: item.selection.endDate ?? new Date(),
+                      key: item.selection.key ?? "selection",
+                    },
+                  ])
+                }
+              />
             </div>
+          )}
 
-            {showDatePicker && (
-              <div className="absolute right-0 top-10 z-30 bg-white shadow p-2 rounded">
-                <DateRange
-                  ranges={range}
-                  onChange={(item) => setRange([item.selection])}
-                />
+          <div className="relative">
+            <button
+              onClick={() => setShowExport(!showExport)}
+              className="px-3 py-2 border rounded-md bg-white hover:bg-gray-50"
+            >
+              Export as ▾
+            </button>
+
+            {showExport && (
+              <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow z-20">
+                <button
+                  className="w-full text-left px-3 py-2 hover:bg-gray-100"
+                  onClick={handleExportPDF}
+                >
+                  PDF
+                </button>
+                <button
+                  className="w-full text-left px-3 py-2 hover:bg-gray-100"
+                  onClick={handleExportExcel}
+                >
+                  Excel
+                </button>
               </div>
             )}
-
-            <div className="relative">
-              <button onClick={() => setShowExport(!showExport)} className="px-3 py-2 border rounded-md bg-white hover:bg-gray-50">
-                Export as ▾
-              </button>
-
-              {showExport && (
-                <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow z-20">
-                  <button className="w-full text-left px-3 py-2 hover:bg-gray-100" onClick={handleExportPDF}>PDF</button>
-                  <button className="w-full text-left px-3 py-2 hover:bg-gray-100" onClick={handleExportExcel}>Excel</button>
-                </div>
-              )}
-            </div>
           </div>
         </div>
 
+        {/* Konten Utama */}
         <div ref={reportRef} className="flex gap-6">
+          {/* ===== Tabel ===== */}
           <div className="w-2/3 bg-white p-4 rounded shadow-sm">
             <table className="w-full text-sm border-collapse">
               <tbody>
                 {laporanRows.map((row, idx) =>
                   row.type === "header" ? (
                     <tr key={idx} className="bg-[#D8F8C2] font-semibold">
-                      <td colSpan={3} className="px-3 py-2 border">{row.label}</td>
+                      <td colSpan={3} className="px-3 py-2 border">
+                        {row.label}
+                      </td>
                     </tr>
                   ) : (
                     <tr key={idx}>
-                      <td className="border px-3 py-2">{row.no}</td>
+                      <td className="border px-3 py-2 w-10">{row.no}</td>
                       <td className="border px-3 py-2">{row.keterangan}</td>
-                      <td className={`border px-3 py-2 text-right ${row.bold ? "font-bold" : ""}`}>
-                        {formatRupiah(row.jumlah)}
+                      <td
+                        className={`border px-3 py-2 text-right ${
+                          row.bold ? "font-bold" : ""
+                        } ${(row.jumlah ?? 0) < 0 ? "text-red-500" : "text-black"}`}
+                      >
+                        {formatRupiah(row.jumlah ?? 0)}
                       </td>
                     </tr>
                   )
@@ -159,8 +205,11 @@ export default function LaporanLabaRugiPage() {
             </table>
           </div>
 
+          {/* ===== Grafik ===== */}
           <div className="w-1/3 bg-white p-4 rounded shadow-sm">
-            <h3 className="text-sm text-gray-600 mb-4">Grafik Laba Bersih 2025</h3>
+            <h3 className="text-sm text-gray-600 mb-4">
+              Grafik Laba Bersih 2025
+            </h3>
             <div style={{ width: "100%", height: 240 }}>
               <ResponsiveContainer>
                 <LineChart data={chartData}>
@@ -168,13 +217,19 @@ export default function LaporanLabaRugiPage() {
                   <XAxis dataKey="month" />
                   <YAxis />
                   <Tooltip />
-                  <Line type="monotone" dataKey="value" stroke="#7CD34A" strokeWidth={3} dot={false} />
+                  <Line
+                    type="monotone"
+                    dataKey="value"
+                    stroke="#7CD34A"
+                    strokeWidth={3}
+                    dot={false}
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
