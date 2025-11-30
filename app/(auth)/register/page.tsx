@@ -8,7 +8,9 @@ import { supabase } from "@/lib/supabase";
 export default function RegisterPage() {
   const [message, setMessage] = useState("");
 
+  // ---------------------------------------
   // GOOGLE REGISTER
+  // ---------------------------------------
   async function handleGoogleLogin() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -20,11 +22,14 @@ export default function RegisterPage() {
     if (error) setMessage("Gagal daftar dengan Google");
   }
 
+  // ---------------------------------------
   // EMAIL REGISTER
+  // ---------------------------------------
   async function handleRegister(e: any) {
     e.preventDefault();
     setMessage("");
 
+    const nama_lengkap = e.target.nama.value;
     const email = e.target.email.value;
     const password = e.target.password.value;
     const confirm = e.target.confirm.value;
@@ -35,13 +40,12 @@ export default function RegisterPage() {
     }
 
     const payload = {
-      nama_lengkap: email,
+      nama_lengkap,
       email,
-      password,
-      google_auth_id: null,
+      password
     };
 
-    const res = await fetch("/api/users", {
+    const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -49,9 +53,7 @@ export default function RegisterPage() {
 
     const data = await res.json();
 
-    // Jika gagal (email sudah terdaftar / error lain)
     if (!res.ok) {
-      // jika backend kirim redirect (jarang, tapi untuk jaga-jaga)
       if (data.redirect) {
         window.location.href = data.redirect;
         return;
@@ -61,19 +63,18 @@ export default function RegisterPage() {
       return;
     }
 
-    // Jika backend mengirim redirect ke halaman OTP
     if (data.redirect) {
       window.location.href = data.redirect;
       return;
     }
 
-    // fallback
     setMessage("Registrasi berhasil!");
   }
 
   return (
     <div className="flex min-h-screen">
 
+      {/* Left image */}
       <div className="hidden md:flex md:w-1/2 bg-green-900 relative overflow-hidden rounded-r-3xl">
         <Image
           src="/images/login-bg.png"
@@ -84,6 +85,7 @@ export default function RegisterPage() {
         />
       </div>
 
+      {/* Form section */}
       <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-white px-8 md:px-16">
         <div className="w-full max-w-sm">
 
@@ -100,19 +102,55 @@ export default function RegisterPage() {
 
           {/* FORM REGISTER */}
           <form className="space-y-4" onSubmit={handleRegister}>
+
+            {/* INPUT NAMA LENGKAP */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-              <input name="email" type="email" className="w-full px-3 py-2 border rounded-md" />
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Nama Lengkap
+              </label>
+              <input
+                name="nama"
+                type="text"
+                placeholder="Nama lengkap Anda"
+                className="w-full px-3 py-2 border rounded-md"
+                required
+              />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Kata Sandi</label>
-              <input name="password" type="password" className="w-full px-3 py-2 border rounded-md" />
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Email
+              </label>
+              <input
+                name="email"
+                type="email"
+                className="w-full px-3 py-2 border rounded-md"
+                required
+              />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Konfirmasi</label>
-              <input name="confirm" type="password" className="w-full px-3 py-2 border rounded-md" />
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Kata Sandi
+              </label>
+              <input
+                name="password"
+                type="password"
+                className="w-full px-3 py-2 border rounded-md"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Konfirmasi
+              </label>
+              <input
+                name="confirm"
+                type="password"
+                className="w-full px-3 py-2 border rounded-md"
+                required
+              />
             </div>
 
             <button
@@ -123,7 +161,7 @@ export default function RegisterPage() {
             </button>
           </form>
 
-          {/* DIVIDER */}
+          {/* Divider */}
           <div className="flex items-center my-4">
             <div className="flex-grow h-px bg-gray-300"></div>
             <span className="px-3 text-gray-500 text-sm">atau</span>

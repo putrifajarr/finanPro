@@ -32,9 +32,10 @@ export default function LaporanLabaRugiPage() {
 
   const reportRef = useRef(null);
 
-  const formatRupiah = (angka) => {
-    const sign = angka < 0 ? "-" : "";
-    const abs = Math.abs(Number(angka) || 0);
+  const formatRupiah = (angka: number | string): string => {
+    const num = Number(angka) || 0;
+    const sign = num < 0 ? "-" : "";
+    const abs = Math.abs(num);
     return sign + "Rp" + abs.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   };
 
@@ -133,7 +134,15 @@ export default function LaporanLabaRugiPage() {
             <div className="absolute z-30 top-12 bg-white shadow p-2 rounded">
               <DateRange
                 ranges={range}
-                onChange={(item) => setRange([item.selection])}
+                onChange={(item) =>
+                  setRange([
+                    {
+                      startDate: item.selection.startDate ?? new Date(),
+                      endDate: item.selection.endDate ?? new Date(),
+                      key: item.selection.key ?? "selection",
+                    },
+                  ])
+                }
               />
             </div>
           )}
@@ -185,9 +194,9 @@ export default function LaporanLabaRugiPage() {
                       <td
                         className={`border px-3 py-2 text-right ${
                           row.bold ? "font-bold" : ""
-                        } ${row.jumlah < 0 ? "text-red-500" : "text-black"}`}
+                        } ${(row.jumlah ?? 0) < 0 ? "text-red-500" : "text-black"}`}
                       >
-                        {formatRupiah(row.jumlah)}
+                        {formatRupiah(row.jumlah ?? 0)}
                       </td>
                     </tr>
                   )

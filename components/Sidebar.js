@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, BarChart, FileText, Package, LogOut } from "lucide-react";
+import { Home, BarChart, FileText, Package, LogOut, Settings } from "lucide-react";
 
 const menu = [
   { name: "Dashboard", icon: Home, href: "/dashboard/home" },
@@ -10,6 +10,7 @@ const menu = [
   { name: "Hutang–Piutang", icon: FileText, href: "/dashboard/hutang-piutang" },
   { name: "Inventaris", icon: Package, href: "/dashboard/inventaris" },
   { name: "Riwayat Transaksi", icon: FileText, href: "/dashboard/transaksi" },
+  { name: "Pengaturan", icon: Settings, href: "/settings/profile" },
 ];
 
 export default function Sidebar() {
@@ -42,7 +43,10 @@ export default function Sidebar() {
       </div>
 
       <button
-        onClick={() => (window.location.href = "/login")} 
+        onClick={async () => {
+          await fetch("/api/auth/logout", { method: "POST" });
+          window.location.href = "/login";
+        }}
         className="flex items-center gap-3 px-3 py-2 mt-6 border border-red-300 text-red-600 rounded-lg hover:bg-red-50"
       >
         <LogOut size={18} /> Logout

@@ -11,6 +11,8 @@ import {
 import Sidebar from "@/components/Sidebar";
 
 
+
+
 export default function RiwayatTransaksi() {
   const [filter, setFilter] = useState("Semua");
   const [search, setSearch] = useState("");
@@ -31,7 +33,7 @@ export default function RiwayatTransaksi() {
   const [idTransaksi, setIdTransaksi] = useState("");
   const [jumlahUang, setJumlahUang] = useState("");
 
-  const formatRupiah = (value) => {
+  const formatRupiah = (value: string) => {
   const angka = value.replace(/[^\d]/g, ""); 
   return angka.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   };
