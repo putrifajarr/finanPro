@@ -330,9 +330,9 @@ export default function HutangPiutangPage() {
                 </thead>
                 <tbody>
                   {filtered.map((row, index) => (
-                    <tr key={row.id_hutang_piutang} className="odd:bg-white even:bg-gray-50 hover:bg-lime-50 transition-colors duration-100">
+                    <tr key={row.id_hutang_piutang} className="hover:bg-gray-50 text-center">
                       <td className="border-r p-3 text-center align-middle">{index + 1}</td>
-                      <td className="border-r p-3 align-middle text-left font-medium">{row.nama_pihak}</td>
+                      <td className="border-r p-3 align-middle text-left">{row.nama_pihak}</td>
                       {/* Kolom Jenis Pihak (menggunakan data lokal/placeholder) */}
                       <td className="border-r p-3 text-center align-middle">
                         <span className="inline-block px-2 py-1 rounded text-xs bg-slate-100 text-slate-700">
