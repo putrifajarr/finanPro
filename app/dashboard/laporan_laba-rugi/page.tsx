@@ -7,7 +7,7 @@ import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from "recharts";
 import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+import autoTable from "jspdf-autotable";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { format } from "date-fns";
@@ -154,15 +154,92 @@ export default function LaporanLabaRugiPage() {
     );
   };
 
-  const handleExportPDF = async () => {
-    if (!reportRef.current) return;
-    const canvas = await html2canvas(reportRef.current, { scale: 2 });
-    const pdf = new jsPDF("landscape", "pt", "a4");
-    const imgData = canvas.toDataURL("image/png");
-    const width = pdf.internal.pageSize.getWidth();
-    const height = (canvas.height * width) / canvas.width;
-    pdf.addImage(imgData, "PNG", 0, 0, width, height);
-    pdf.save("laporan-laba-rugi.pdf");
+  const handleExportPDF = () => {
+    const doc = new jsPDF();
+
+    // Judul
+    doc.setFontSize(18);
+    doc.setTextColor(21, 128, 61); // Lime-700
+    doc.text("Laporan Laba Rugi", 14, 25);
+    
+    // Periode
+    doc.setFontSize(10);
+    doc.setTextColor(100, 100, 100); // Gray text
+    doc.text(
+      `Periode: ${format(range[0].startDate, "dd MMM yyyy")} - ${format(range[0].endDate, "dd MMM yyyy")}`,
+      14,
+      32
+    );
+
+    // Siapkan body tabel untuk autoTable
+    const tableBody = laporanRows.map((row) => {
+      if (row.type === "header") {
+        return ["", row.label?.toUpperCase() || "", ""]; 
+      } else {
+        return [
+           row.no || "", 
+           row.keterangan || "", 
+           formatRupiah(row.jumlah ?? 0)
+        ];
+      }
+    });
+
+    autoTable(doc, {
+      startY: 40,
+      head: [["NO", "KETERANGAN", "JUMLAH"]],
+      body: tableBody,
+      theme: 'grid', // Grid yang rapi
+      styles: { 
+        fontSize: 9, 
+        cellPadding: 5,
+        valign: 'middle',
+        lineColor: [220, 220, 220],
+        lineWidth: 0.1,
+        textColor: [50, 50, 50]
+      },
+      headStyles: {
+        fillColor: [77, 124, 15], // Lime-700 (Hijau Tua Web)
+        textColor: [255, 255, 255],
+        fontStyle: 'bold',
+        halign: 'center'
+      },
+      // Styling kolom
+      columnStyles: {
+        0: { cellWidth: 20, halign: 'center' }, // No Center
+        1: { cellWidth: 'auto' }, 
+        2: { cellWidth: 100, halign: 'right' }   // Jumlah Right
+      },
+      didParseCell: (data) => {
+        const originalRow = laporanRows[data.row.index];
+        
+        if (originalRow.type === "header") {
+           // Section Header (Mis: PENDAPATAN)
+           if (data.section === 'body') {
+              data.cell.styles.fontStyle = 'bold';
+              data.cell.styles.fillColor = [236, 252, 203]; // Lime-100 (Hijau Muda Web)
+              data.cell.styles.textColor = [54, 83, 20]; // Lime-800 text
+              
+              if (data.column.index === 0) {
+                 data.cell.colSpan = 3;
+                 data.cell.text = [originalRow.label?.toUpperCase() || ""];
+                 data.cell.styles.halign = 'left';
+              }
+           }
+        } else {
+           // Baris Total / Bold
+           if (originalRow.bold) {
+              data.cell.styles.fontStyle = 'bold';
+              data.cell.styles.fillColor = [249, 250, 251]; // Gray-50
+           }
+           // Angka Negatif -> Merah
+           if (data.column.index === 2 && (originalRow.jumlah ?? 0) < 0) {
+              data.cell.styles.textColor = [220, 38, 38]; // Red-600
+           }
+        }
+      }
+    });
+
+    doc.save("laporan-laba-rugi.pdf");
   };
 
   return (
