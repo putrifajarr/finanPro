@@ -6,6 +6,7 @@ import {
   LayoutDashboard, PieChart, ArrowRightLeft, Package,
   History, Settings, LogOut, Loader2
 } from "lucide-react";
+import Sidebar from "@/components/Sidebar";
 // import Link from "next/link"; // Gunakan Link jika di lokal
 
 // Sesuaikan tipe data dengan respon API
@@ -175,26 +176,12 @@ export default function RiwayatTransaksiPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50 font-sans text-gray-800">
+    <div className="flex min-h-screen bg-gray-100">
       
-      {/* SIDEBAR */}
-      <aside className="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col justify-between fixed h-full z-10">
-        <div className="p-6">
-          <h1 className="text-2xl font-bold text-[#76C043] mb-10">FinanPro</h1>
-          <nav className="space-y-2">
-            <a href="/dashboard" className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg"><LayoutDashboard className="h-5 w-5" /> <span className="font-medium">Dashboard</span></a>
-            <a href="/dashboard/laporan" className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg"><PieChart className="h-5 w-5" /> <span className="font-medium">Laporan Laba</span></a>
-            <a href="/dashboard/hutang" className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg"><ArrowRightLeft className="h-5 w-5" /> <span className="font-medium">Hutang–Piutang</span></a>
-            <a href="/dashboard/inventaris" className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg"><Package className="h-5 w-5" /> <span className="font-medium">Inventaris</span></a>
-            <div className="flex items-center gap-3 px-4 py-3 bg-[#EEFAE6] text-[#76C043] rounded-lg cursor-pointer"><History className="h-5 w-5" /> <span className="font-bold">Riwayat Transaksi</span></div>
-            <a href="/dashboard/pengaturan" className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg"><Settings className="h-5 w-5" /> <span className="font-medium">Pengaturan</span></a>
-          </nav>
-        </div>
-        <div className="p-6 border-t border-gray-100"><button className="flex items-center gap-2 text-red-500 font-medium"><LogOut className="h-4 w-4" /> Logout</button></div>
-      </aside>
+      <Sidebar />
 
       {/* MAIN CONTENT */}
-      <main className="flex-1 ml-0 md:ml-64 p-8">
+      <main className="flex-1 px-10 py-8">
         <h2 className="text-2xl font-bold mb-6 text-gray-800">Riwayat Transaksi</h2>
 
         {/* TOOLBAR */}

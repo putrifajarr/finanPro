@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 
 // --- GET: AMBIL DATA ---
@@ -78,6 +79,7 @@ export async function POST(req: NextRequest) {
     });
 
     console.log("[POST] Berhasil disimpan:", newTransaksi.id_transaksi);
+    revalidatePath("/dashboard/home");
     return NextResponse.json(newTransaksi, { status: 201 });
 
   } catch (error: any) {

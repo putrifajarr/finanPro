@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 
 // Fix untuk Next.js 15: params adalah Promise
@@ -60,6 +61,7 @@ export async function PUT(req: NextRequest, context: Context) {
     });
 
     console.log("[PUT] Berhasil update:", updated.id_transaksi);
+    revalidatePath("/dashboard/home");
     return NextResponse.json({ message: "Update berhasil", data: updated }, { status: 200 });
 
   } catch (error: any) {
@@ -91,6 +93,7 @@ export async function DELETE(req: NextRequest, context: Context) {
     });
 
     console.log("[DELETE] Berhasil menghapus transaksi induk.");
+    revalidatePath("/dashboard/home");
     return NextResponse.json({ message: "Berhasil dihapus" }, { status: 200 });
 
   } catch (error: any) {
