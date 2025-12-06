@@ -1,16 +1,10 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react"; // Tambahkan useEffect
 import Sidebar from "@/components/Sidebar";
 import { DateRange } from "react-date-range";
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
+  LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from "recharts";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
@@ -21,6 +15,10 @@ import { format } from "date-fns";
 export default function LaporanLabaRugiPage() {
   const [showExport, setShowExport] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  
+  // STATE BARU: Untuk menyimpan data dari Database
+  const [apiData, setApiData] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
 
   const [range, setRange] = useState([
     {
@@ -39,48 +37,106 @@ export default function LaporanLabaRugiPage() {
     return sign + "Rp" + abs.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   };
 
-  // ====== Data Laporan ======
+  // ====== FETCH DATA DARI API ======
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      // Format tanggal agar sesuai input API (yyyy-mm-dd)
+      const start = format(range[0].startDate, "yyyy-MM-dd");
+      const end = format(range[0].endDate, "yyyy-MM-dd");
+      
+      const res = await fetch(`/api/laporan-laba?startDate=${start}&endDate=${end}`);
+      if (!res.ok) throw new Error("Gagal ambil data");
+      
+      const data = await res.json();
+      setApiData(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Panggil fetch setiap kali tanggal (range) berubah
+  useEffect(() => {
+    fetchData();
+  }, [range]);
+
+
+  // ====== SIAPKAN DATA UNTUK TABEL ======
+  // Gunakan optional chaining (?.) agar tidak error saat data belum dimuat
+  const s = apiData?.summary;
+  const t = apiData?.totals;
+
+  // Kita mapping hasil API ke struktur Tabel Anda
   const laporanRows = [
     { type: "header", label: "Pendapatan dan HPP" },
-    { no: "1", keterangan: "Penjualan bersih", jumlah: 500000000 },
-    { no: "", keterangan: "Harga pokok penjualan", jumlah: -300000000 },
-    { no: "", keterangan: "Laba kotor", jumlah: 200000000, bold: true },
+    { 
+        no: "1", 
+        keterangan: "Penjualan bersih", 
+        jumlah: s?.penjualan || 0 
+    },
+    { 
+        no: "", 
+        keterangan: "Harga pokok penjualan (Pembelian)", 
+        // Dikali -1 agar tampil merah/negatif
+        jumlah: (s?.pembelian || 0) * -1 
+    },
+    { 
+        no: "", 
+        keterangan: "Laba kotor", 
+        jumlah: t?.labaKotor || 0, 
+        bold: true 
+    },
 
     { type: "header", label: "Beban Operasional" },
-    { no: "2", keterangan: "Beban penjualan & pemasaran", jumlah: -40000000 },
-    { no: "", keterangan: "Beban administrasi & umum", jumlah: -30000000 },
-    { no: "", keterangan: "Total beban operasional", jumlah: -70000000, bold: true },
-    { no: "", keterangan: "Laba operasional", jumlah: 130000000, bold: true },
+    // Karena di DB Anda hanya ada 1 kategori "Operasional", kita gabung di sini
+    { 
+        no: "2", 
+        keterangan: "Total Beban Operasional", 
+        jumlah: (s?.operasional || 0) * -1 
+    },
+    { 
+        no: "", 
+        keterangan: "Laba operasional", 
+        jumlah: t?.labaOperasional || 0, 
+        bold: true 
+    },
 
+    // Note: Kategori "Pendapatan Lainnya" belum ada di Enum Schema Anda,
+    // Jadi sementara saya hide atau set 0 agar tidak error.
     { type: "header", label: "Pendapatan & Beban Lainnya" },
-    { no: "3", keterangan: "Pendapatan bunga", jumlah: 50000000 },
-    { no: "", keterangan: "Beban bunga", jumlah: -10000000 },
-    { no: "", keterangan: "Keuntungan penjualan aset", jumlah: 3000000 },
-    { no: "", keterangan: "Total pendapatan & beban lainnya", jumlah: 2000000, bold: true },
-    { no: "", keterangan: "Laba sebelum pajak", jumlah: 128000000, bold: true },
+    { no: "3", keterangan: "Pendapatan/Beban Lain", jumlah: 0 },
+    { no: "", keterangan: "Total Lainnya", jumlah: 0, bold: true },
+    { 
+        no: "", 
+        keterangan: "Laba sebelum pajak", 
+        jumlah: t?.labaOperasional || 0, // Sama dgn operasional krn yg lain 0
+        bold: true 
+    },
 
     { type: "header", label: "Pajak Penghasilan" },
-    { no: "4", keterangan: "Pajak penghasilan", jumlah: -28000000 },
-    { no: "", keterangan: "Laba bersih", jumlah: 100000000, bold: true },
+    { 
+        no: "4", 
+        keterangan: "Pajak penghasilan", 
+        jumlah: (s?.pajak || 0) * -1 
+    },
+    { 
+        no: "", 
+        keterangan: "Laba bersih", 
+        jumlah: t?.labaBersih || 0, 
+        bold: true 
+    },
   ];
 
-  // ====== Data Grafik ======
+  // ====== Data Grafik Dummy (Bisa diabaikan dulu) ======
   const chartData = [
     { month: "Jan", value: 45 },
     { month: "Feb", value: 50 },
-    { month: "Mar", value: 55 },
-    { month: "Apr", value: 60 },
-    { month: "May", value: 70 },
-    { month: "Jun", value: 75 },
-    { month: "Jul", value: 80 },
-    { month: "Aug", value: 85 },
-    { month: "Sep", value: 90 },
-    { month: "Oct", value: 95 },
-    { month: "Nov", value: 100 },
-    { month: "Dec", value: 110 },
+    // ... dst (Nanti ini juga bisa dibuat dinamis kalau mau)
   ];
 
-  // ====== Export Excel ======
+  // ... (SISA KODE EXPORT EXCEL/PDF BIARKAN SAMA SEPERTI SEBELUMNYA) ...
   const handleExportExcel = () => {
     const wsData = [
       ["No", "Keterangan", "Jumlah (Rp)"],
@@ -98,7 +154,6 @@ export default function LaporanLabaRugiPage() {
     );
   };
 
-  // ====== Export PDF ======
   const handleExportPDF = async () => {
     if (!reportRef.current) return;
     const canvas = await html2canvas(reportRef.current, { scale: 2 });
@@ -110,7 +165,6 @@ export default function LaporanLabaRugiPage() {
     pdf.save("laporan-laba-rugi.pdf");
   };
 
-  // ====== Tampilan Halaman ======
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
@@ -118,7 +172,10 @@ export default function LaporanLabaRugiPage() {
 
       {/* Main */}
       <main className="flex-1 p-8">
-        <h1 className="text-2xl font-bold mb-6">Laporan Laba-Rugi</h1>
+        <h1 className="text-2xl font-bold mb-6">
+            Laporan Laba-Rugi 
+            {loading && <span className="text-sm font-normal text-gray-500 ml-2">(Memuat data...)</span>}
+        </h1>
 
         {/* Filter dan Export */}
         <div className="flex items-center gap-3 mb-6 relative">
@@ -208,7 +265,7 @@ export default function LaporanLabaRugiPage() {
           {/* ===== Grafik ===== */}
           <div className="w-1/3 bg-white p-4 rounded shadow-sm">
             <h3 className="text-sm text-gray-600 mb-4">
-              Grafik Laba Bersih 2025
+              Grafik Laba Bersih
             </h3>
             <div style={{ width: "100%", height: 240 }}>
               <ResponsiveContainer>
