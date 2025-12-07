@@ -13,7 +13,7 @@ import Sidebar from "@/components/Sidebar";
 
 // Tipe Data Produk
 interface Produk {
-  id_produk: string; // String karena dari API sudah dikonversi dari BigInt
+  id_produk: string; 
   nama_produk: string;
   kode_produk: string;
   stok_minimum: number;
@@ -27,6 +27,7 @@ export default function InventarisPage() {
   const [produkList, setProdukList] = useState<Produk[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
 
   // Form State
@@ -40,7 +41,7 @@ export default function InventarisPage() {
   });
 
 
-  // 1. FETCH DATA
+  // FETCH DATA
   const fetchProduk = async () => {
     try {
       const res = await fetch("/api/inventaris");
@@ -59,7 +60,7 @@ export default function InventarisPage() {
   }, []);
 
 
-  // 2. SIMPAN DATA
+  // SIMPAN DATA
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -105,7 +106,7 @@ export default function InventarisPage() {
   };
 
 
-  // 3. HAPUS DATA
+  // HAPUS DATA
   const handleDelete = async (id: string) => {
     if (!confirm("Hapus produk ini?")) return;
     try {
@@ -117,6 +118,15 @@ export default function InventarisPage() {
     }
   };
 
+
+  // SEARCH FILTER
+  const filteredProduk = produkList.filter((item) => {
+    const term = searchTerm.toLowerCase();
+    return (
+      item.nama_produk.toLowerCase().includes(term) ||
+      item.kode_produk.toLowerCase().includes(term)
+    );
+  });
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -132,12 +142,15 @@ export default function InventarisPage() {
         <div className="flex flex-col md:flex-row gap-4 justify-between items-center mb-6">
           <div className="relative w-full md:w-1/3">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
-            <input type="text" placeholder="Cari produk..." className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-400 bg-white" />
+            <input 
+              type="text" 
+              placeholder="Cari produk..." 
+              className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-400 bg-white"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
           <div className="flex gap-3">
-            <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 text-sm shadow-sm text-gray-600">
-              <Filter className="h-4 w-4" /> Filter
-            </button>
             <button onClick={() => setShowModal(true)} className="flex items-center gap-2 px-6 py-2 bg-lime-400 text-black border border-green-300 rounded-md hover:bg-green-300 font-medium shadow-sm transition-colors">
               <Plus className="h-4 w-4" /> Tambah
             </button>
@@ -163,10 +176,12 @@ export default function InventarisPage() {
             <tbody>
               {loading ? (
                 <tr><td colSpan={8} className="text-center py-8 text-gray-500">Memuat data...</td></tr>
-              ) : produkList.length === 0 ? (
-                <tr><td colSpan={8} className="text-center py-8 text-gray-500">Belum ada data produk.</td></tr>
+              ) : filteredProduk.length === 0 ? (
+                <tr><td colSpan={8} className="text-center py-8 text-gray-500">
+                  {searchTerm ? "Produk tidak ditemukan." : "Belum ada data produk."}
+                </td></tr>
               ) : (
-                produkList.map((item, index) => (
+                filteredProduk.map((item, index) => (
                   <tr key={item.id_produk} className="border-b hover:bg-gray-50 text-gray-700 transition-colors">
                     <td className="px-4 py-3 text-center border-r border-gray-200">{index + 1}</td>
                     <td className="px-4 py-3 border-r border-gray-200 font-medium">{item.nama_produk}</td>
