@@ -80,7 +80,7 @@ export default function LaporanLabaRugiPage() {
         no: "", 
         keterangan: "Harga pokok penjualan (Pembelian)", 
         // Dikali -1 agar tampil merah/negatif
-        jumlah: (s?.pembelian || 0) * -1 
+        jumlah: (s?.hpp || 0) * -1 
     },
     { 
         no: "", 
@@ -129,12 +129,9 @@ export default function LaporanLabaRugiPage() {
     },
   ];
 
-  // ====== Data Grafik Dummy (Bisa diabaikan dulu) ======
-  const chartData = [
-    { month: "Jan", value: 45 },
-    { month: "Feb", value: 50 },
-    // ... dst (Nanti ini juga bisa dibuat dinamis kalau mau)
-  ];
+  // ====== Data Grafik ======
+  // Gunakan data dari API, jika kosong pakai array kosong
+  const chartData = apiData?.chartData || [];
 
   // ... (SISA KODE EXPORT EXCEL/PDF BIARKAN SAMA SEPERTI SEBELUMNYA) ...
   const handleExportExcel = () => {
@@ -348,7 +345,7 @@ export default function LaporanLabaRugiPage() {
               <ResponsiveContainer>
                 <LineChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
-                  <XAxis dataKey="month" />
+                  <XAxis dataKey="date" />
                   <YAxis />
                   <Tooltip />
                   <Line
