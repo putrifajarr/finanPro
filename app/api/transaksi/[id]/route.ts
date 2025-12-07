@@ -2,16 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 
-// Fix untuk Next.js 15: params adalah Promise
 type Context = {
   params: Promise<{ id: string }>;
 };
 
-// --- PUT: EDIT DATA ---
+// PUT: EDIT DATA
 export async function PUT(req: NextRequest, context: Context) {
   try {
-    const { id } = await context.params; // WAJIB AWAIT
-    // HARDCODE USER ID = 1 (Agar konsisten dengan route.ts)
+    const { id } = await context.params; 
     const userId = 1; 
 
     console.log(`[PUT] Request Edit ID: ${id}`);
@@ -19,14 +17,14 @@ export async function PUT(req: NextRequest, context: Context) {
     const body = await req.json();
     const { tanggal, total_harga, deskripsi, jenis_transaksi } = body;
 
-    // 1. Cek Transaksi
+    // Cek Transaksi
     const existing = await prisma.transaksi.findUnique({ where: { id_transaksi: id } });
     
     if (!existing) {
       return NextResponse.json({ error: "Data tidak ditemukan" }, { status: 404 });
     }
 
-    // 2. Handle Kategori (jika user mengubah jenis transaksi)
+    // Handle Kategori
     let idKategoriToUse = existing.id_kategori;
     
     if (jenis_transaksi) {
@@ -49,7 +47,7 @@ export async function PUT(req: NextRequest, context: Context) {
       idKategoriToUse = kategoriValid.id_kategori;
     }
 
-    // 3. Update Data
+    // Update Data
     const updated = await prisma.transaksi.update({
       where: { id_transaksi: id },
       data: {
@@ -70,14 +68,13 @@ export async function PUT(req: NextRequest, context: Context) {
   }
 }
 
-// --- DELETE: HAPUS DATA ---
+// DELETE: HAPUS DATA
 export async function DELETE(req: NextRequest, context: Context) {
   try {
-    const { id } = await context.params; // WAJIB AWAIT
+    const { id } = await context.params; 
     console.log(`[DELETE] Request Hapus ID: ${id}`);
 
-    // 1. Hapus Detail (Anak) Dulu
-    // Kita pakai try-catch khusus di sini supaya kalau kosong tidak error
+    // Hapus Detail Dulu
     try {
         const deletedDetails = await prisma.transaksi_detail.deleteMany({
             where: { id_transaksi: id }
@@ -87,12 +84,12 @@ export async function DELETE(req: NextRequest, context: Context) {
         console.log("[DELETE] Info: Tidak ada detail transaksi atau gagal hapus detail.");
     }
 
-    // 2. Hapus Transaksi (Induk)
+    // Hapus Transaksi
     await prisma.transaksi.delete({
       where: { id_transaksi: id },
     });
 
-    console.log("[DELETE] Berhasil menghapus transaksi induk.");
+    console.log("[DELETE] Berhasil menghapus transaksi.");
     revalidatePath("/dashboard/home");
     return NextResponse.json({ message: "Berhasil dihapus" }, { status: 200 });
 

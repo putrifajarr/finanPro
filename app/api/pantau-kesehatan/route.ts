@@ -7,16 +7,12 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
   try {
-    // --- PENTING: GANTI INI DENGAN ID USER YANG BENAR ---
-    // Cek tabel 'app_users' di Supabase Anda, lihat kolom 'id_user'.
     const userId = 1; 
 
     const { searchParams } = new URL(request.url);
     const rangeParam = searchParams.get("range") || "30 Hari";
 
-    // 1. DATA KARTU (Status, Saldo, Cashflow)
-    // ----------------------------------------
-    // Ambil SEMUA transaksi untuk hitung Saldo Real
+    // DATA KARTU (Status, Saldo, Cashflow)
     const txAllTime = await prisma.transaksi.findMany({
         where: { user_id: userId },
         include: { kategori: true }
@@ -26,13 +22,13 @@ export async function GET(request: Request) {
     let totalMasuk = 0;
     let totalKeluar = 0;
     txAllTime.forEach(t => {
-        const cat = t.kategori?.nama_kategori; // 'penjualan', 'pembelian', etc.
+        const cat = t.kategori?.nama_kategori;
         if (cat === 'penjualan') totalMasuk += t.total_harga;
         else if (['pembelian', 'operasional', 'pajak'].includes(cat)) totalKeluar += t.total_harga;
     });
     const saldoSaatIni = totalMasuk - totalKeluar;
 
-    // Ambil Data Bulan Ini (Untuk Cashflow & Rasio)
+    // Ambil Data Bulan Ini
     const now = new Date();
     const startMonth = startOfMonth(now);
     const endMonth = endOfMonth(now);
@@ -52,8 +48,7 @@ export async function GET(request: Request) {
         else if (['pembelian', 'operasional', 'pajak'].includes(cat)) { cfKeluar += t.total_harga; }
     });
     
-    // Hitung Rasio Laba (Sederhana: Revenue - Pengeluaran Bulan Ini / Revenue)
-    // Note: Untuk akurasi tinggi perlu HPP, tapi ini estimasi cepat agar tidak 0
+    // Hitung Rasio Laba
     let rasioLaba = 0;
     if (revenueBulanIni > 0) {
         rasioLaba = ((revenueBulanIni - cfKeluar) / revenueBulanIni) * 100;

@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Data wajib belum lengkap" }, { status: 400 });
     }
 
-    // 1. Cek User (Buat jika belum ada, agar tidak error foreign key)
+    // Cek User
     let user = await prisma.app_users.findUnique({ where: { id_user: userId } });
     if (!user) {
       console.log("[POST] User 1 belum ada, membuat user dummy...");
@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // 2. Cek Kategori (Buat jika belum ada)
+    // Cek Kategori
     const jenisDb = jenis_transaksi.toLowerCase() === "pemasukan" ? "pemasukan" : "pengeluaran";
     let kategori = await prisma.kategori.findFirst({ where: { jenis_kategori: jenisDb } });
 
@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // 3. Simpan Transaksi
+    // Simpan Transaksi
     const newTransaksi = await prisma.transaksi.create({
       data: {
         user_id: userId,

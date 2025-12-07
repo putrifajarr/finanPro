@@ -10,13 +10,11 @@ export async function GET(req: NextRequest) {
     });
 
 
-    // KONVERSI PENTING:
-    // Prisma BigInt & Decimal tidak bisa langsung jadi JSON. Kita harus ubah ke String/Number.
     const safeProduk = produk.map((item) => ({
       ...item,
-      id_produk: item.id_produk.toString(), // BigInt -> String
-      harga_pokok: Number(item.harga_pokok), // Decimal -> Number
-      harga_jual: Number(item.harga_jual),   // Decimal -> Number
+      id_produk: item.id_produk.toString(),
+      harga_pokok: Number(item.harga_pokok),
+      harga_jual: Number(item.harga_jual),
     }));
 
 
@@ -56,13 +54,11 @@ export async function POST(req: NextRequest) {
         stok_saat_ini: Number(stok_saat_ini) || 0,
         satuan: satuan || "Pcs",
         harga_pokok: Number(harga_pokok),
-        // Kita set harga jual sama dengan harga pokok dulu (default) agar tidak error
         harga_jual: Number(harga_pokok),
       },
     });
 
 
-    // Konversi BigInt untuk respon
     const safeResponse = {
       ...newProduk,
       id_produk: newProduk.id_produk.toString(),
