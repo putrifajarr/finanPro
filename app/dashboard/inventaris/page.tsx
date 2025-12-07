@@ -8,6 +8,7 @@ import {
   History, Settings
 } from "lucide-react";
 import Link from "next/link";
+import Sidebar from "@/components/Sidebar";
 
 
 // Tipe Data Produk
@@ -118,45 +119,12 @@ export default function InventarisPage() {
 
 
   return (
-    <div className="flex min-h-screen bg-gray-50 font-sans text-gray-800">
+    <div className="flex min-h-screen bg-gray-100">
      
-      {/* --- SIDEBAR --- */}
-      <aside className="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col justify-between fixed h-full">
-        <div className="p-6">
-          <h1 className="text-2xl font-bold text-[#76C043] mb-10">FinanPro</h1>
-          <nav className="space-y-2">
-            <Link href="/dashboard" className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
-              <LayoutDashboard className="h-5 w-5" /> <span className="font-medium">Dashboard</span>
-            </Link>
-            <Link href="/dashboard/laporan" className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
-              <PieChart className="h-5 w-5" /> <span className="font-medium">Laporan Laba</span>
-            </Link>
-            <Link href="/dashboard/hutang" className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
-              <ArrowRightLeft className="h-5 w-5" /> <span className="font-medium">Hutang–Piutang</span>
-            </Link>
-           
-            {/* Menu Aktif (Inventaris) */}
-            <div className="flex items-center gap-3 px-4 py-3 bg-[#EEFAE6] text-[#76C043] rounded-lg">
-              <Package className="h-5 w-5" /> <span className="font-bold">Inventaris</span>
-            </div>
-
-
-            <Link href="/dashboard/transaksi" className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
-              <History className="h-5 w-5" /> <span className="font-medium">Riwayat Transaksi</span>
-            </Link>
-            <Link href="/dashboard/pengaturan" className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
-              <Settings className="h-5 w-5" /> <span className="font-medium">Pengaturan</span>
-            </Link>
-          </nav>
-        </div>
-        <div className="p-6 border-t border-gray-100">
-          <button className="flex items-center gap-2 text-red-500 font-medium hover:text-red-700">Logout</button>
-        </div>
-      </aside>
-
+      <Sidebar />
 
       {/* --- KONTEN UTAMA --- */}
-      <main className="flex-1 ml-0 md:ml-64 p-8">
+      <main className="flex-1 px-10 py-8">
         <h2 className="text-2xl font-bold mb-6 text-gray-800">Inventaris</h2>
 
 
@@ -170,7 +138,7 @@ export default function InventarisPage() {
             <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 text-sm shadow-sm text-gray-600">
               <Filter className="h-4 w-4" /> Filter
             </button>
-            <button onClick={() => setShowModal(true)} className="flex items-center gap-2 px-6 py-2 bg-[#B9FBC0] text-green-900 border border-green-300 rounded-md hover:bg-green-300 font-medium shadow-sm transition-colors">
+            <button onClick={() => setShowModal(true)} className="flex items-center gap-2 px-6 py-2 bg-lime-400 text-black border border-green-300 rounded-md hover:bg-green-300 font-medium shadow-sm transition-colors">
               <Plus className="h-4 w-4" /> Tambah
             </button>
           </div>
@@ -180,7 +148,7 @@ export default function InventarisPage() {
         {/* Tabel */}
         <div className="overflow-x-auto bg-white rounded-lg shadow-sm border border-gray-200">
           <table className="w-full text-sm text-left">
-            <thead className="bg-[#B9FBC0] text-gray-900 font-bold border-b border-gray-300">
+            <thead className="bg-lime-300 text-gray-900 font-bold border-b border-gray-300">
               <tr>
                 <th className="px-4 py-3 text-center border-r border-gray-400 w-12">No</th>
                 <th className="px-4 py-3 text-center border-r border-gray-400">Nama Produk</th>

@@ -209,14 +209,14 @@ export default function RiwayatTransaksiPage() {
                 <option value="Pengeluaran">Pengeluaran</option>
               </select>
             </div>
-            <button onClick={handleTambahClick} className="flex items-center gap-2 px-6 py-2 bg-[#B9FBC0] text-green-900 border border-green-300 rounded-md hover:bg-green-300 font-medium transition-colors"><Plus className="h-4 w-4" /> Tambah</button>
+            <button onClick={handleTambahClick} className="flex items-center gap-2 px-6 py-2 bg-lime-500 text-black border border-green-300 rounded-md hover:bg-green-300 font-medium transition-colors"><Plus className="h-4 w-4" /> Tambah</button>
           </div>
         </div>
 
         {/* TABEL */}
         <div className="overflow-x-auto bg-white rounded-lg shadow-sm border border-gray-200 min-h-[400px]">
           <table className="w-full text-sm text-left">
-            <thead className="bg-lime-100 text-gray-900 font-bold border-b border-gray-300">
+            <thead className="bg-lime-300 text-gray-900 font-bold border-b border-gray-300">
               <tr>
                 <th className="px-4 py-3 text-center w-12 border-r border-gray-400">No</th>
                 <th className="px-4 py-3 text-center border-r border-gray-400">Tanggal</th>
