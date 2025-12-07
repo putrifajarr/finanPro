@@ -163,10 +163,10 @@ export default function ProfileSettingsClient() {
               {loadingAvatar ? "Menyimpan..." : "Simpan Foto"}
             </button>
           )}
+          
+          {/* NAVIGASI YANG SUDAH DIUPDATE (Tombol dihapus) */}
           <nav className="mt-8 w-full space-y-3">
             <button className="w-full text-left px-4 py-3 rounded bg-lime-100 text-lime-800 font-medium">Profil</button>
-            <button className="w-full text-left px-4 py-3 rounded border border-lime-300">Login dan Password</button>
-            <button className="w-full text-left px-4 py-3 rounded border border-lime-300">Panduan</button>
             <button onClick={async () => { await fetch("/api/auth/logout", { method: "POST" }); window.location.href = "/login"; }} className="w-full text-left px-4 py-3 rounded border border-lime-300 text-red-600 hover:bg-red-50">Logout</button>
           </nav>
         </aside>

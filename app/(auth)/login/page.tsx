@@ -13,14 +13,7 @@ export default function LoginPage() {
   // GOOGLE LOGIN
   // ------------------------------------------
   async function handleGoogleLogin() {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: "http://localhost:3000/api/auth/google/callback",
-      },
-    });
-
-    if (error) setMessage("Gagal login dengan Google");
+    window.location.href = "/api/auth/google";
   }
 
   // ------------------------------------------
