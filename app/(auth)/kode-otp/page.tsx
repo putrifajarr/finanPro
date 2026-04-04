@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 
-export default function KodeOTPPage() {
+function KodeOTPContent() {
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
 
@@ -130,5 +130,13 @@ export default function KodeOTPPage() {
       </div>
 
     </div>
+  );
+}
+
+export default function KodeOTPPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <KodeOTPContent />
+    </Suspense>
   );
 }

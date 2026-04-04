@@ -59,20 +59,30 @@ export async function GET(request: Request) {
     let totalPajak = 0;
 
     transactions.forEach((t) => {
-      // Konversi ke Number untuk menghindari masalah Decimal/Float
       const amount = Number(t.total_harga) || 0;
-      // Gunakan optional chaining (?.) agar tidak crash jika kategori dihapus
-      const cat = t.kategori?.nama_kategori?.toLowerCase(); 
+      const catName = t.kategori?.nama_kategori?.toLowerCase(); 
+      const catType = t.kategori?.jenis_kategori; // 'pemasukan' atau 'pengeluaran'
       
-      if (cat === "penjualan") {
+      if (catName === "penjualan") {
           totalPenjualan += amount;
           addToDate(t.tanggal, amount);
-      } else if (cat === "operasional") {
-          totalOperasional += amount;
-          addToDate(t.tanggal, -amount);
-      } else if (cat === "pajak") {
-          totalPajak += amount;
-          addToDate(t.tanggal, -amount);
+      } else if (catName === "operasional") {
+          // Jika tipe pemasukan, maka operasional berkurang (atau laba bertambah)
+          if (catType === "pemasukan") {
+              totalOperasional -= amount; 
+              addToDate(t.tanggal, amount);
+          } else {
+              totalOperasional += amount;
+              addToDate(t.tanggal, -amount);
+          }
+      } else if (catName === "pajak") {
+          if (catType === "pemasukan") {
+              totalPajak -= amount;
+              addToDate(t.tanggal, amount);
+          } else {
+              totalPajak += amount;
+              addToDate(t.tanggal, -amount);
+          }
       }
     });
 

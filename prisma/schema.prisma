@@ -59,7 +59,7 @@ model transaksi {
   id_kategori  String   @db.Uuid  // harus sama dengan kategori.id_kategori
 
   kategori kategori  @relation(fields: [id_kategori], references: [id_kategori])
-  user     app_users @relation(fields: [user_id], references: [id_user])
+  user     app_users @relation(fields: [user_id], references: [id_user], onDelete: Cascade)
 
   transaksi_detail transaksi_detail[]
 }
@@ -76,8 +76,8 @@ model transaksi_detail {
   satuan        String?
   subtotal      Decimal?
 
-  user      app_users @relation(fields: [user_id], references: [id_user])
-  transaksi transaksi @relation(fields: [id_transaksi], references: [id_transaksi])
+  user      app_users @relation(fields: [user_id], references: [id_user], onDelete: Cascade)
+  transaksi transaksi @relation(fields: [id_transaksi], references: [id_transaksi], onDelete: Cascade)
   produk    produk?   @relation(fields: [id_produk], references: [id_produk])
 }
 
@@ -101,7 +101,7 @@ model hutang_piutang {
   jatuh_tempo          DateTime?
   status_pembayaran    status_pembayaran    @default(belum_lunas)
 
-  user app_users @relation(fields: [user_id], references: [id_user])
+  user app_users @relation(fields: [user_id], references: [id_user], onDelete: Cascade)
 }
 
 model produk {

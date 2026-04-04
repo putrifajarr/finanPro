@@ -1,5 +1,6 @@
-// file: finanPro/app/settings/profile/page.tsx
 "use client";
+
+export const dynamic = 'force-dynamic';
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
@@ -20,6 +21,7 @@ type Profile = {
 type Toast = { message: string; type: "success" | "error"; id: number; };
 
 type AuthMeResponse = { user: { email: string; [key: string]: any } | null; };
+
 
 export default function ProfileSettingsClient() {
   const [profile, setProfile] = useState<Profile | null>(null);

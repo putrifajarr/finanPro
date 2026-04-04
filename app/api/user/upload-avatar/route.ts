@@ -2,14 +2,17 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { prisma } from "@/lib/prisma";
 
-// Supabase admin client pakai service_role (bypass RLS)
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Helper function to lazily initialize supabase admin client
+const getSupabaseAdmin = () => {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+    process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+  );
+};
 
 export const POST = async (req: Request) => {
   try {
+    const supabaseAdmin = getSupabaseAdmin();
     const formData = await req.formData();
     const file = formData.get("avatar") as File;
     const id_user = formData.get("id_user") as string;

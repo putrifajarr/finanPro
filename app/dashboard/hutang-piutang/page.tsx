@@ -10,6 +10,8 @@ import {
   TrashIcon,
 } from "@heroicons/react/24/outline";
 
+export const dynamic = 'force-dynamic';
+
 // --- TIPE DATA ---
 export type HutangPiutang = {
   id_hutang_piutang: string; 

@@ -12,6 +12,8 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { format } from "date-fns";
 
+export const dynamic = 'force-dynamic';
+
 export default function LaporanLabaRugiPage() {
   const [showExport, setShowExport] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);

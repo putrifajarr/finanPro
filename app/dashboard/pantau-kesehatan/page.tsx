@@ -5,6 +5,8 @@ import Sidebar from "@/components/Sidebar";
 import CardStat from "@/components/CardStat";
 import ChartKeuangan from "@/components/ChartKeuangan";
 
+export const dynamic = 'force-dynamic';
+
 export default function PantauKesehatanPage() {
   // State untuk menyimpan data dari Database
   const [data, setData] = useState<any>(null);

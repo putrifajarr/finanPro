@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function ResendSuccessPage() {
+function ResendSuccessContent() {
   const params = useSearchParams();
   const email = params.get("email");
 
@@ -44,5 +45,13 @@ export default function ResendSuccessPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ResendSuccessPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ResendSuccessContent />
+    </Suspense>
   );
 }

@@ -4,10 +4,11 @@ import { prisma } from "@/lib/prisma";
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const idProdukBigInt = BigInt(params.id); // Convert String params ke BigInt
+    const { id } = await params;
+    const idProdukBigInt = BigInt(id); // Convert String params ke BigInt
 
 
     await prisma.produk.delete({

@@ -7,9 +7,9 @@ import {
   History, Settings, LogOut, Loader2
 } from "lucide-react";
 import Sidebar from "@/components/Sidebar";
-// import Link from "next/link"; // Gunakan Link jika di lokal
 
-// Sesuaikan tipe data dengan respon API
+export const dynamic = 'force-dynamic';
+
 interface Transaksi {
   id_transaksi: string;
   tanggal: string;

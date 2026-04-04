@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 
-export default function OtpExpiredPage() {
+function OtpExpiredContent() {
   const params = useSearchParams();
   const email = params.get("email");
 
@@ -70,5 +70,13 @@ export default function OtpExpiredPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function OtpExpiredPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <OtpExpiredContent />
+    </Suspense>
   );
 }

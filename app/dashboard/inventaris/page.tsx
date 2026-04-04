@@ -22,6 +22,7 @@ interface Produk {
   harga_pokok: number;
 }
 
+export const dynamic = 'force-dynamic';
 
 export default function InventarisPage() {
   const [produkList, setProdukList] = useState<Produk[]>([]);
